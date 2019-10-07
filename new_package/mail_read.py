@@ -1,52 +1,17 @@
-# Check Examples
+from imap_tools import MailBox
+import os
 
-# python 3.7.1
+EMAIL = os.environ.get('OFF_MAIL')
+PASSWORD = os.environ.get('OFF_PASSWORD')
+MAIL_SERVER = os.environ.get('OFF_SERVER')
+MAIL_PORT = 993
 
+with MailBox(MAIL_SERVER).login(EMAIL, PASSWORD) as mailbox:
+    subjects = [msg.subject for msg in mailbox.fetch()]
+    cont = [msg.text for msg in mailbox.fetch()]
 
-ORG_EMAIL = "@agramakov.me"
-FROM_EMAIL = "a" + ORG_EMAIL
-FROM_PWD = "Mann__1990"
-SMTP_SERVER = "imap.agramakov.me"
-SMTP_PORT = 993
-
-import smtplib
-import time
-import imaplib
-import email
-
-
-# -------------------------------------------------
-#
-# Utility to read email from Gmail Using Python
-#
-# ------------------------------------------------
-
-def read_email_from_gmail():
-    try:
-        mail = imaplib.IMAP4_SSL(SMTP_SERVER)
-        mail.login(FROM_EMAIL, FROM_PWD)
-        mail.select('inbox')
-
-        type, data = mail.search(None, 'ALL')
-        mail_ids = data[0]
-
-        id_list = mail_ids.split()
-        first_email_id = int(id_list[0])
-        latest_email_id = int(id_list[-1])
-
-        for i in range(latest_email_id, first_email_id, -1):
-            typ, data = mail.fetch(i, '(RFC822)')
-
-            for response_part in data:
-                if isinstance(response_part, tuple):
-                    msg = email.message_from_string(response_part[1])
-                    email_subject = msg['subject']
-                    email_from = msg['from']
-                    print('From : ' + email_from + '\n')
-                    print('Subject : ' + email_subject + '\n')
-
-    except Exception as e:
-        print(str(e))
-
-
-read_email_from_gmail()
+print(subjects)
+print(cont)
+# OR the same otherwise
+# with MailBox('imap.mail.com').login('test@mail.com', 'password') as mailbox:
+#     subjects = [msg.subject for msg in mailbox.fetch()]
