@@ -1,0 +1,1 @@
+from .not__main__ import start

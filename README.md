@@ -1,5 +1,5 @@
 # offlinizer
 
-## readme
+## Project page
 
-content
+https://blog.agramakov.me/offlinizer/
